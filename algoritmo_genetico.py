@@ -1,13 +1,39 @@
 #-*- coding: utf-8 -*-
+from random import random
+
 class Produto():
   def __init__(self, nome, espaco, valor):
     self.nome = nome
     self.espaco = espaco
     self.valor = valor
 
-class individuo():
+class Individuo():
   def __init__(self, espacos, valores, limite_espacos, geracao=0):
+    self.espacos = espacos
+    self.valores = valores
+    self.limite_espacos = limite_espacos
+    self.nota_avaliacao = 0
+    self.espaco_usado = 0
+    self.geracao = geracao
+    self.cromossomo = []
+
+    for i in range(len(espacos)):
+      if random() < 0.5:
+        self.cromossomo.append("0")
+      else:
+        self.cromossomo.append("1")
     
+  def avaliacao(self):
+    nota = 0
+    soma_espacos = 0
+    for i in range(len(self.cromossomo)):
+      if self.cromossomo[i] == '1':
+        nota += self.valores[i]
+        soma_espacos += self.espacos[i]
+    if soma_espacos > self.limite_espacos:
+      nota = 1
+    self.nota_avaliacao = nota
+    self.espaco_usado = soma_espacos
 
 if __name__ == '__main__':
   #p1 = Produto("Iphone 6", 0.0000899, 2199.12)
@@ -26,7 +52,27 @@ if __name__ == '__main__':
   lista_produtos.append(Produto("Geladeira Consul", 0.870, 1199.89))
   lista_produtos.append(Produto("Notebook Lenovo", 0.498, 1999.90))
   lista_produtos.append(Produto("Notebook Asus", 0.527, 3999.00))
-  for p in lista_produtos:
-    print(p)
- 
 
+  espacos = []
+  valores = []
+  nomes = []
+
+  for produto in lista_produtos:
+    espacos.append(produto.espaco)
+    valores.append(produto.valor)
+    nomes.append(produto.nome)
+
+  limite = 3
+  individuo1 = Individuo(espacos, valores, limite)
+  print("Espacos = %s" % str(individuo1.espacos))
+  print("Valores = %s" % str(individuo1.valores))
+  print("cromossomo = %s" % str(individuo1.cromossomo))
+
+  print("\nComponente da Carga")
+  for i in range(len(lista_produtos)):
+    if individuo1.cromossomo[i] == '1':
+      print("Nome %s: R$ %s" % (lista_produtos[i].nome, lista_produtos[i].valor))
+  
+  individuo1.avaliacao()
+  print("Nota: %s" % str(individuo1.nota_avaliacao))
+  print("Espaco usado: %s" % str(individuo1.espaco_usado))
