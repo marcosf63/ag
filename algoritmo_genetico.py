@@ -74,7 +74,7 @@ class AlgoritmoGenetico():
       self.populacao.append(Individuo(espacos,valores, limite_espacos))
     self.melhor_solucao = self.populacao[0]
 
-  def ordena_populacao():
+  def ordena_populacao(self):
     self.populacao = sorted(self.populacao, key = lambda populacao: populacao.nota_avaliacao, reverse=True)
 
 if __name__ == '__main__':
@@ -110,9 +110,11 @@ if __name__ == '__main__':
 
   ag = AlgoritmoGenetico(tamanho_populacao)
   ag.inicializa_populacao(espacos, valores, limite)
- 
+  for individuo in ag.populacao:
+    individuo.avaliacao()
+
+  ag.ordena_populacao()
   for i in range(ag.tamanho_populacao):
-    ag.populacao[i].avaliacao()
     print(
       "*** Individuo %s ***\n" % i,
       "Espacos %s\n" % str(ag.populacao[i].espacos),
