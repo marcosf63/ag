@@ -51,6 +51,17 @@ class Individuo():
 
     return filhos
 
+  def mutacao(self, taxa_mutacao):
+    print("Antes  %s" % self.cromossomo)
+    for i in range(len(self.cromossomo)):
+      if random() < taxa_mutacao:
+        if self.cromossomo[i] == '1':
+          self.cromossomo[i] = '0'
+        else:
+          self.cromossomo[i] = '1'
+    print("Despois %s" % self.cromossomo)
+    return self
+
 if __name__ == '__main__':
   #p1 = Produto("Iphone 6", 0.0000899, 2199.12)
   lista_produtos = []
@@ -99,10 +110,6 @@ if __name__ == '__main__':
   print("Nota: %s" % str(individuo2.nota_avaliacao))
   print("Espaco usado: %s" % str(individuo2.espaco_usado))
 
-  # Testes apos crossover
-  #print(individuo1.cromossomo)
-  #print(individuo2.cromossomo)
-  #decendentes = individuo1.crossover(individuo2)
-  #print(decendentes[0].cromossomo)
-  #print(decendentes[1].cromossomo)
+  individuo1.mutacao(0.05)
+  individuo2.mutacao(0.05)
 
