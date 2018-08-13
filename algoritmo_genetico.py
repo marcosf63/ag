@@ -45,7 +45,7 @@ class Individuo():
        Individuo(self.espacos, self.valores, self.limite_espacos, self.geracao + 1),
        Individuo(self.espacos, self.valores, self.limite_espacos, self.geracao + 1)
     ]
-
+    
     filhos[0].cromossomo = filho1
     filhos[0].cromossomo = filho2
 
@@ -73,6 +73,9 @@ class AlgoritmoGenetico():
     for i in range(self.tamanho_populacao):
       self.populacao.append(Individuo(espacos,valores, limite_espacos))
     self.melhor_solucao = self.populacao[0]
+
+  def ordena_populacao():
+    self.populacao = sorted(self.populacao, key = lambda populacao: populacao.nota_avaliacao, reverse=True)
 
 if __name__ == '__main__':
   #p1 = Produto("Iphone 6", 0.0000899, 2199.12)
@@ -109,9 +112,11 @@ if __name__ == '__main__':
   ag.inicializa_populacao(espacos, valores, limite)
  
   for i in range(ag.tamanho_populacao):
+    ag.populacao[i].avaliacao()
     print(
       "*** Individuo %s ***\n" % i,
-      "Espacos %s" % str(ag.populacao[i].espacos),
-      "Valores %s" % str(ag.populacao[i].valores),
-      "Cromossomo %s" % str(ag.populacao[i].cromossomo)
+      "Espacos %s\n" % str(ag.populacao[i].espacos),
+      "Valores %s\n" % str(ag.populacao[i].valores),
+      "Cromossomo %s\n" % str(ag.populacao[i].cromossomo),
+      "Nota %s\n" % str(ag.populacao[i].nota_avaliacao)
     )
