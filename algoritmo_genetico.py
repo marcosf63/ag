@@ -36,8 +36,7 @@ class Individuo():
     self.espaco_usado = soma_espacos
 
   def crossover(self, outro_individuo):
-    corte = round(random() * len(self.cromossomo))
-    print(corte)    
+    corte = round(random() * len(self.cromossomo))   
     filho1 = outro_individuo.cromossomo[0:corte] + self.cromossomo[corte:]
     filho2 = self.cromossomo[0:corte] + outro_individuo.cromossomo[corte:]
 
@@ -52,14 +51,14 @@ class Individuo():
     return filhos
 
   def mutacao(self, taxa_mutacao):
-    print("Antes  %s" % self.cromossomo)
+    #print("Antes  %s" % self.cromossomo)
     for i in range(len(self.cromossomo)):
       if random() < taxa_mutacao:
         if self.cromossomo[i] == '1':
           self.cromossomo[i] = '0'
         else:
           self.cromossomo[i] = '1'
-    print("Despois %s" % self.cromossomo)
+    #print("Despois %s" % self.cromossomo)
     return self
 
 class AlgoritmoGenetico():
@@ -76,6 +75,10 @@ class AlgoritmoGenetico():
 
   def ordena_populacao(self):
     self.populacao = sorted(self.populacao, key = lambda populacao: populacao.nota_avaliacao, reverse=True)
+
+  def melhor_individuo(self, individuo):
+    if individuo.nota_avaliacao > self.melhor_solucao.nota_avaliacao:
+      self.melhor_solucao = individuo
 
 if __name__ == '__main__':
   #p1 = Produto("Iphone 6", 0.0000899, 2199.12)
@@ -114,11 +117,8 @@ if __name__ == '__main__':
     individuo.avaliacao()
 
   ag.ordena_populacao()
-  for i in range(ag.tamanho_populacao):
-    print(
-      "*** Individuo %s ***\n" % i,
-      "Espacos %s\n" % str(ag.populacao[i].espacos),
-      "Valores %s\n" % str(ag.populacao[i].valores),
-      "Cromossomo %s\n" % str(ag.populacao[i].cromossomo),
-      "Nota %s\n" % str(ag.populacao[i].nota_avaliacao)
-    )
+  ag.melhor_individuo(ag.populacao[0])
+  print(
+    "Melhor Solucao: %s" % ag.melhor_solucao.cromossomo,
+    "Nota: %s\n" % ag.melhor_solucao.nota_avaliacao,
+  )
