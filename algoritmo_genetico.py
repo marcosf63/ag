@@ -80,6 +80,75 @@ class AlgoritmoGenetico():
     if individuo.nota_avaliacao > self.melhor_solucao.nota_avaliacao:
       self.melhor_solucao = individuo
 
+  def soma_avaliacoes(self):
+    soma = 0
+    for individuo in self.populacao:
+      soma += individuo.nota_avaliacao
+    
+    return soma
+
+  
+  def seleciona_pai(self, soma_avaliacoes):
+    pai = -1
+    valor_sorteado = random() * soma_avaliacoes
+    soma = 0
+    i = 0
+    while i < len(self.populacao) and soma < valor_sorteado:
+      soma += self.populacao[i].nota_avaliacao
+      pai += 1
+      i += 1
+
+    return pai
+
+  def visualiza_geracao(self):
+    melhor = self.populacao[0]
+    print("G: %s -> Valor: %s Espaco: %s Cromossomo %s" % 
+          (self.populacao[0].geracao, melhor.nota_avaliacao, melhor.espaco_usado, melhor.cromossomo)
+          )
+
+  def resolver(self, taxa_mutacao, numero_geracoes, espacos, valores, limite_espacos):
+    self.inicializa_populacao(espacos, valores, limite_espacos)
+    
+    for individuo in self.populacao:
+      individuo.avaliacao()
+
+    self.ordena_populacao()
+
+    self.visualiza_geracao()
+
+    for i in range(numero_geracoes):
+      soma_avaliacao = self.soma_avaliacoes()
+      nova_populacao = []
+
+      for individuos_gerados in range(0, self.tamanho_populacao, 2):
+        pai1 = self.seleciona_pai(soma_avaliacao)
+        pai2 = self.seleciona_pai(soma_avaliacao)
+
+        filhos = self.populacao[pai1].crossover(self.populacao[pai2])
+
+        nova_populacao.append(filhos[0].mutacao(taxa_mutacao))
+        nova_populacao.append(filhos[1].mutacao(taxa_mutacao))
+      
+      self.populacao = list(nova_populacao)
+
+      for individuo in self.populacao:
+        individuo.avaliacao()
+
+      self.ordena_populacao()
+
+      self.visualiza_geracao()
+
+      melhor = self.populacao[0]
+      self.melhor_individuo(melhor)
+
+    print(
+      "\nMelhor solucao -> G: %s Valor: %s Espaco: %s Cromossomo: %s" %
+      (self.melhor_solucao.geracao, self.melhor_solucao.nota_avaliacao, self.melhor_solucao.espaco_usado, self.melhor_solucao.cromossomo)
+    )
+
+    return self.melhor_solucao.cromossomo
+
+
 if __name__ == '__main__':
   #p1 = Produto("Iphone 6", 0.0000899, 2199.12)
   lista_produtos = []
@@ -108,17 +177,13 @@ if __name__ == '__main__':
     nomes.append(produto.nome)
 
   limite = 3
-  
   tamanho_populacao = 20
+  taxa_mutacao = 0.01
+  numero_geracoes = 100
 
   ag = AlgoritmoGenetico(tamanho_populacao)
-  ag.inicializa_populacao(espacos, valores, limite)
-  for individuo in ag.populacao:
-    individuo.avaliacao()
+  resultado = ag.resolver(taxa_mutacao, numero_geracoes, espacos, valores, limite)
 
-  ag.ordena_populacao()
-  ag.melhor_individuo(ag.populacao[0])
-  print(
-    "Melhor Solucao: %s" % ag.melhor_solucao.cromossomo,
-    "Nota: %s\n" % ag.melhor_solucao.nota_avaliacao,
-  )
+  for i in range(len(lista_produtos)):
+    if resultado[i] == '1':
+      print("Nome %s - R$ %s " % (lista_produtos[i].nome, lista_produtos[i].valor))
